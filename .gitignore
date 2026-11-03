@@ -7,7 +7,5 @@ data/*
 !data/.gitkeep
 !data/synthea_seed/
 !data/synthea_seed/**
-outputs/*
-!outputs/.gitkeep
 .pytest_cache/
 *.egg-info/

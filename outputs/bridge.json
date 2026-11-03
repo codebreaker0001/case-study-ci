@@ -1,0 +1,60 @@
+{
+  "quarters": {
+    "Q3": {
+      "label": "last_quarter",
+      "start": "2026-03-05T00:00:00",
+      "end": "2026-06-03T00:00:00",
+      "sequential": {
+        "pipeline_metric": 0.6219630709426628,
+        "pipeline_n": 4116,
+        "after_population_restriction": 0.6613278222681478,
+        "after_population_n": 3871,
+        "after_measure_swap": 0.9547920433996383,
+        "after_measure_n": 3871,
+        "crm_metric": 0.706984211934707,
+        "crm_n": 3737,
+        "population_effect": 0.039364751325485,
+        "measure_effect": 0.2934642211314905,
+        "source_effect": -0.24780783146493135,
+        "total_gap": -0.08502114099204416
+      },
+      "shapley": {
+        "population": 0.03635842263142145,
+        "measure": 0.14090940776551727,
+        "source": -0.09224668940489457
+      }
+    },
+    "Q4": {
+      "label": "this_quarter",
+      "start": "2026-06-03T00:00:00",
+      "end": "2026-09-01T00:00:00",
+      "sequential": {
+        "pipeline_metric": 0.592114364768273,
+        "pipeline_n": 4337,
+        "after_population_restriction": 0.6649404453650958,
+        "after_population_n": 3862,
+        "after_measure_swap": 0.7244950802692905,
+        "after_measure_n": 3862,
+        "crm_metric": 0.6784303397419015,
+        "crm_n": 3797,
+        "population_effect": 0.07282608059682283,
+        "measure_effect": 0.05955463490419477,
+        "source_effect": -0.04606474052738907,
+        "total_gap": -0.08631597497362853
+      },
+      "shapley": {
+        "population": 0.0604179524323066,
+        "measure": 0.027603122418703125,
+        "source": -0.0017050998773811925
+      }
+    }
+  },
+  "quarter_over_quarter": {
+    "pipeline_change": -0.02984870617438984,
+    "crm_change": -0.028553872192805474,
+    "population_effect_change": 0.033461329271337825,
+    "measure_effect_change": -0.23390958622729574,
+    "source_effect_change": 0.20174309093754228,
+    "explanation": "The gap widened mostly because the population effect grew: more newly enrolled patients this quarter never received a first hub fill (modeled after a payer prior-authorization policy change), which pulls the all-enrolled pipeline population down without affecting the CRM dashboard's filler-only population at all."
+  }
+}
