@@ -1,0 +1,42 @@
+{
+  "Q1": {
+    "metric": 0.7376858058874963,
+    "n": 3431,
+    "adherent": 2531,
+    "first_fill_abandonment": {
+      "rate": 0.056899395272127506,
+      "n_abandoned": 207,
+      "n_population": 3638
+    }
+  },
+  "Q2": {
+    "metric": 0.7045454545454546,
+    "n": 3652,
+    "adherent": 2573,
+    "first_fill_abandonment": {
+      "rate": 0.058277462609592545,
+      "n_abandoned": 226,
+      "n_population": 3878
+    }
+  },
+  "Q3": {
+    "metric": 0.6832859726168948,
+    "n": 3871,
+    "adherent": 2645,
+    "first_fill_abandonment": {
+      "rate": 0.059523809523809534,
+      "n_abandoned": 245,
+      "n_population": 4116
+    }
+  },
+  "Q4": {
+    "metric": 0.6809943034697048,
+    "n": 3862,
+    "adherent": 2630,
+    "first_fill_abandonment": {
+      "rate": 0.10952271155176385,
+      "n_abandoned": 475,
+      "n_population": 4337
+    }
+  }
+}

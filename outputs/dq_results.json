@@ -1,0 +1,35 @@
+{
+  "as_of_quarter": "Q3",
+  "checks": [
+    {
+      "name": "Hub vs CRM divergence",
+      "status": "warn",
+      "detail": "|pipeline - crm| = 8.5% as of Q3 (warn>8pts, fail>15pts)"
+    },
+    {
+      "name": "Patient-level hub/CRM disagreement rate",
+      "status": "warn",
+      "detail": "28.5% of 3737 comparable patients disagree (warn>15%, fail>30%)"
+    },
+    {
+      "name": "CRM flag staleness",
+      "status": "fail",
+      "detail": "69.0% of notes repeat the immediately prior flag unchanged (warn>35%, fail>55%)"
+    },
+    {
+      "name": "CRM note coverage",
+      "status": "pass",
+      "detail": "3.5% of fillers have no CRM flag by Q3 end (warn>15%, fail>30%)"
+    },
+    {
+      "name": "Enrolled-without-fill trend",
+      "status": "pass",
+      "detail": "never-filled share by quarter: 5.7%, 5.8%, 6.0%"
+    },
+    {
+      "name": "Implausible age at diagnosis",
+      "status": "fail",
+      "detail": "8 profiles with age at diagnosis <18 or >95 in the current base table"
+    }
+  ]
+}

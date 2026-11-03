@@ -34,8 +34,8 @@ def filler_patient_ids(hub_fills: pd.DataFrame, as_of: pd.Timestamp) -> set:
     return set(hub_fills.loc[hub_fills["fill_date"] <= as_of, "patient_id"].unique())
 
 
-def pdc_by_patient(enrolments: pd.DataFrame, hub_fills: pd.DataFrame, q_start, q_end) -> pd.Series:
-    """PDC for each patient in `enrolments`, over [q_start, q_end), from hub fills only."""
+def covered_days_by_patient(enrolments: pd.DataFrame, hub_fills: pd.DataFrame, q_start, q_end) -> pd.Series:
+    """Raw count of hub-fill-covered days in [q_start, q_end) for each patient in `enrolments`."""
     quarter_days = (q_end - q_start).days
     fills = hub_fills[(hub_fills["fill_date"] < q_end) & (hub_fills["fill_date"] + pd.to_timedelta(hub_fills["days_supply"], unit="D") > q_start)]
     covered = {}
@@ -48,12 +48,18 @@ def pdc_by_patient(enrolments: pd.DataFrame, hub_fills: pd.DataFrame, q_start, q
                 a = (start - q_start).days
                 b = (end - q_start).days
                 days[a:b] = True
-        covered[pid] = days.sum()
-    pdc = pd.Series(0.0, index=enrolments["patient_id"])
+        covered[pid] = int(days.sum())
+    result = pd.Series(0, index=enrolments["patient_id"])
     for pid, days_covered in covered.items():
-        if pid in pdc.index:
-            pdc.loc[pid] = days_covered / quarter_days
-    return pdc
+        if pid in result.index:
+            result.loc[pid] = days_covered
+    return result
+
+
+def pdc_by_patient(enrolments: pd.DataFrame, hub_fills: pd.DataFrame, q_start, q_end) -> pd.Series:
+    """PDC for each patient in `enrolments`, over [q_start, q_end), from hub fills only."""
+    quarter_days = (q_end - q_start).days
+    return covered_days_by_patient(enrolments, hub_fills, q_start, q_end) / quarter_days
 
 
 def on_schedule_by_patient(enrolments: pd.DataFrame, hub_fills: pd.DataFrame, q_start, q_end, grace_days=GRACE_DAYS) -> pd.Series:
