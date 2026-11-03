@@ -284,7 +284,7 @@ def build_overlay(base: pd.DataFrame, config=CONFIG):
                 pd.notna(sim["disenrollment_date"]) and q["start"] <= sim["disenrollment_date"] <= q["end"]
             )
 
-            truth_on_schedule = not (missed_recent or delay_recent or hold_active)
+            truth_on_schedule = (not sim["never_filler"]) and not (missed_recent or delay_recent or hold_active)
             if truth_on_schedule and pyrng.random() < config["crm_truth_extra_miss_prob"]:
                 truth_on_schedule = False  # case-manager-perceived status diverges from fill data
 
