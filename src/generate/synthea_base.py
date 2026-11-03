@@ -79,6 +79,12 @@ def build_base_table(patients: pd.DataFrame, conditions: pd.DataFrame) -> pd.Dat
         how="left",
     )
     base["age"] = ((REFERENCE_DATE - base["BIRTHDATE"]).dt.days // 365).astype(int)
+    base["age_at_diagnosis"] = (
+        (base["diagnosis_date"] - base["BIRTHDATE"]).dt.days // 365
+    ).astype(int)
+    base["days_diagnosis_to_death"] = (
+        base["DEATHDATE"] - base["diagnosis_date"]
+    ).dt.days
 
     base = base.rename(
         columns={
@@ -98,6 +104,8 @@ def build_base_table(patients: pd.DataFrame, conditions: pd.DataFrame) -> pd.Dat
             "cancer_type",
             "diagnosis_date",
             "death_date",
+            "age_at_diagnosis",
+            "days_diagnosis_to_death",
         ]
     ].sort_values("patient_id").reset_index(drop=True)
 

@@ -40,8 +40,36 @@ Deliberately excluded: "suspected"/"situation" codes (e.g. 162573006
 colon", 713197008 "Recurrent rectal polyp") -- these are not confirmed
 diagnoses.
 
+Added to the base table: `age_at_diagnosis` (derived, `(diagnosis_date -
+birth_date).days // 365`) and `days_diagnosis_to_death` (derived,
+`(death_date - diagnosis_date).days`, null if alive).
+
 ## Loader behavior
 
 `synthea_base.load_base_table()` uses fresh Synthea output from
 `data/synthea_raw/csv/` if present, else falls back to the committed cache at
 `data/synthea_seed/cancer_patients_base.csv`, logging which path it took.
+
+## Augmented patient table
+
+`data/synthea_seed/augmented_patients.csv` (built by `src/generate/augment.py`)
+is what Stage 3 uses. **Clinical profiles come from Synthea (n≈242, filtered
+to 234 after dropping 8 implausible ages at diagnosis); volume comes from
+stratified resampling with jitter up to n=5,000, due to time constraints.**
+Limitation: profiles repeat with small variation, so this data has less
+clinical diversity than a full Synthea run at the scale the incidence math
+calls for (~278k, see PROGRESS.md Decisions log). A full run would remove
+this limitation by changing one config value (`population_size` in
+`config/synthea_run.json`) and re-running `scripts/run_synthea.py` +
+`src/generate/synthea_base.py` + `src/generate/augment.py`.
+
+| Column | Source | Notes |
+|---|---|---|
+| `patient_id` | *derived* | New UUID per augmented (resampled) patient |
+| `source_synthea_id` | base table `patient_id` | The real Synthea profile this row was resampled from |
+| `sex`, `state`, `cancer_type` | base table | Copied verbatim from the source profile |
+| `age_at_diagnosis` | base table, jittered | Source value +/- random integer in [-3, 3], clipped to [18, 95] |
+| `diagnosis_date` | base table | Copied verbatim (not jittered) |
+| `days_diagnosis_to_death` | base table, scaled | Source value x random factor in [0.8, 1.2] if the source died, else null |
+| `death_date` | *derived* | Recomputed as `diagnosis_date + days_diagnosis_to_death` for consistency with the scaled value, else null |
+| `is_augmented` | *derived* | Always `True` |

@@ -2,10 +2,11 @@
 
 ## Current status
 
-Stage 2 (Synthea base patients) complete at a reduced population size of
-5,000 (deliberately scaled down from the ~150k-280k the math called for, to
-get the pipeline working first -- see Decisions log). 242 cancer patients
-extracted and cached. Waiting for Stage 3 instructions.
+Stage 2 (Synthea base patients) complete. Volume gap closed via resampling
+rather than a full Synthea run (time-boxed decision, see Decisions log):
+242 real profiles -> 234 after plausibility filtering -> resampled with
+jitter to 5,000 augmented patients in data/synthea_seed/augmented_patients.csv,
+which is the table Stage 3 will use. Waiting for Stage 3 instructions.
 
 ## 1. Project setup
 
@@ -25,6 +26,10 @@ extracted and cached. Waiting for Stage 3 instructions.
 - [x] Cached extract saved to data/synthea_seed/cancer_patients_base.csv (242 rows, 24KB, committed)
 - [x] DATA_LINEAGE.md written
 - [x] tests/test_synthea_base.py: 5 tests, all passing (no dup IDs, every row has a diagnosis, dates valid, multi-diagnosis rule, cache-only loader)
+- [x] age_at_diagnosis, days_diagnosis_to_death added to the base table; 8 implausible profiles (age at diagnosis <18 or >95) dropped before augmentation
+- [x] src/generate/augment.py: stratified (by cancer_type) resample-with-replacement to n=5,000, with age_at_diagnosis jitter and days_diagnosis_to_death scaling; fixed seed
+- [x] data/synthea_seed/augmented_patients.csv written (652KB, 5,000 rows), committed -- this is the table Stage 3 uses
+- [x] tests/test_augment.py: 2 tests passing (unique patient_id, cancer type mix within 2pts of source)
 
 ## 3. Program overlay + calibration
 
@@ -169,3 +174,16 @@ extracted and cached. Waiting for Stage 3 instructions.
   a clean *column* extraction, not plausibility filtering. Candidate for a
   Stage 5 data-quality check (e.g. flag/exclude diagnosis age < 18) or a
   Stage 3 filter when building the enrolled cohort.
+
+- **Volume via resampling instead of a full Synthea run (time-boxed)**: the
+  planned ~278k-patient run (~8.5h) was killed before starting given a
+  tight deadline; no process was actually running at the time (the full
+  run already completed at n=5,000 in the prior pass). Rather than wait,
+  closed the volume gap by resampling: **clinical profiles from Synthea
+  (n≈242); volume from stratified resampling with jitter to n=5,000, due
+  to time constraints. Limitation: profiles repeat with small variation,
+  so the data has less clinical diversity than a full Synthea run. A full
+  run would remove this limitation by changing one config value**
+  (`population_size` in `config/synthea_run.json`) and re-running.
+  8 of 242 profiles were dropped as implausible (age at diagnosis <18 or
+  >95) before resampling, leaving 234 source profiles.
