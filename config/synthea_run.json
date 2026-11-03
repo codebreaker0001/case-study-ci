@@ -1,0 +1,10 @@
+{
+  "seed": 42,
+  "clinician_seed": 42,
+  "population_size": 5000,
+  "reference_date": "20260901",
+  "state": "Massachusetts",
+  "city": null,
+  "modules_of_interest": ["breast_cancer", "colorectal_cancer", "lung_cancer"],
+  "csv_export": true
+}
